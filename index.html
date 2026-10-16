@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="id" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zikrul - IT Specialist & Padang Food Enthusiast | RM IT Padang</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: JetBrains Mono & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        padangRed: '#B91C1C',      /* Red Garnet RM Padang */
+                        padangGold: '#F59E0B',     /* Gold Minang */
+                        padangDark: '#0F172A',     /* Cyber Dark */
+                        padangWarm: '#FFFBEB',     /* Warm Cream Background */
+                        padangCardDark: '#1E293B',
+                        padangCardWarm: '#FEF3C7',
+                        chiliGreen: '#10B981',
+                    },
+                    fontFamily: {
+                        code: ['JetBrains Mono', 'monospace'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'neon-gold': '0 0 20px rgba(245, 158, 11, 0.35)',
+                        'neon-red': '0 0 20px rgba(185, 28, 28, 0.4)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Roof Ornament Effect */
+        .gonjong-shape {
+            clip-path: polygon(50% 0%, 100% 30%, 85% 30%, 85% 100%, 15% 100%, 15% 30%, 0% 30%);
+        }
+        
+        .bagonjong-header {
+            position: relative;
+        }
+        
+        .bagonjong-header::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 12px;
+            background: linear-gradient(90deg, #B91C1C, #F59E0B, #B91C1C);
+            border-radius: 6px 6px 0 0;
+        }
+
+        /* Glassmorphism Dark/Light */
+        .glass-dark {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .glass-warm {
+            background: rgba(255, 251, 235, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(185, 28, 28, 0.2);
+        }
+
+        /* Terminal Styling */
+        .terminal-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .terminal-scroll::-webkit-scrollbar-thumb {
+            background: #F59E0B;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-padangDark text-slate-100 dark:bg-padangDark dark:text-slate-100 transition-colors duration-500 font-sans min-h-screen flex flex-col justify-between selection:bg-padangRed selection:text-white">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 transition-all duration-300 bg-padangRed text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-padangGold">
+        <i class="fa-solid fa-utensils text-padangGold text-lg"></i>
+        <span id="toast-msg" class="font-semibold text-sm">Pesanan berhasil ditambahkan!</span>
+    </div>
+
+    <!-- ================= 1. HEADER & NAVIGATION ================= -->
+    <header class="sticky top-0 z-40 w-full glass-dark dark:glass-dark transition-all duration-300 border-b border-padangGold/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            
+            <!-- Logo Zikrul IT Padang -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 bg-gradient-to-br from-padangRed to-padangGold rounded-xl flex items-center justify-center font-code font-bold text-lg text-white shadow-neon-gold group-hover:rotate-12 transition-transform">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-lg tracking-tight block text-white dark:text-white font-code">RM. IT ZIKRUL</span>
+                    <span class="text-[10px] text-padangGold font-semibold tracking-widest uppercase block -mt-1">Software & Padang Cuisine</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-300">
+                <a href="#about" class="hover:text-padangGold transition-colors">Tentang Zikrul</a>
+                <a href="#menu" class="hover:text-padangGold transition-colors">Menu Kombo IT</a>
+                <a href="#simulator" class="hover:text-padangGold transition-colors">Order Tech Stack</a>
+                <a href="#terminal" class="hover:text-padangGold transition-colors">CLI Padang</a>
+                <a href="#testimonials" class="hover:text-padangGold transition-colors">Review Pelanggan</a>
+            </nav>
+
+            <!-- Actions: Theme Toggle & WhatsApp Order Button -->
+            <div class="flex items-center gap-3">
+                <!-- Theme Switcher Toggle -->
+                <button id="theme-toggle" onclick="toggleTheme()" class="p-2.5 rounded-xl bg-slate-800 dark:bg-slate-800 border border-padangGold/40 text-padangGold hover:scale-105 transition-all" title="Ganti Tema">
+                    <i id="theme-icon" class="fa-solid fa-sun"></i>
+                </button>
+
+                <!-- CTA Button -->
+                <a href="#simulator" class="hidden sm:flex bg-gradient-to-r from-padangRed to-red-700 hover:from-red-600 hover:to-padangRed text-white text-xs font-bold font-code px-4 py-2.5 rounded-xl shadow-neon-red items-center gap-2 transition-all">
+                    <i class="fa-solid fa-fire"></i> RACIK STACK NOW
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-slate-300 text-2xl focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 pt-2 border-t border-slate-800 flex flex-col gap-3 font-semibold text-sm bg-padangDark">
+            <a href="#about" class="mobile-link text-slate-300 hover:text-padangGold">Tentang Zikrul</a>
+            <a href="#menu" class="mobile-link text-slate-300 hover:text-padangGold">Menu Kombo IT</a>
+            <a href="#simulator" class="mobile-link text-slate-300 hover:text-padangGold">Order Tech Stack</a>
+            <a href="#terminal" class="mobile-link text-slate-300 hover:text-padangGold">CLI Padang</a>
+            <a href="#testimonials" class="mobile-link text-slate-300 hover:text-padangGold">Review Pelanggan</a>
+        </div>
+    </header>
+
+    <!-- ================= HERO SECTION ================= -->
+    <section id="about" class="relative py-16 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <!-- Background Glowing Orbs -->
+        <div class="absolute top-1/4 left-10 w-72 h-72 bg-padangRed/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-10 right-10 w-96 h-96 bg-padangGold/15 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            
+            <!-- Left Hero Text -->
+            <div class="space-y-6 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-padangRed/20 border border-padangRed text-padangGold text-xs font-code font-bold">
+                    <span class="w-2 h-2 rounded-full bg-padangGold animate-ping"></span>
+                    SERVIS IT RASA BUMBU RENDANG 12 JAM
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white dark:text-white">
+                    Zikrul — <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-padangGold via-red-500 to-padangRed">
+                        IT Specialist & Padang Food Enthusiast
+                    </span>
+                </h1>
+
+                <p class="text-slate-300 dark:text-slate-300 text-base sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0">
+                    "Debug Code Sambil Rendang, Deploy App Cepat Seperti Pelayan Nasi Padang Bawa 10 Piring Sekaligus!"
+                </p>
+
+                <div class="pt-2 flex flex-wrap gap-4 justify-center lg:justify-start">
+                    <a href="#simulator" class="bg-padangRed hover:bg-red-700 text-white font-bold text-sm px-6 py-3.5 rounded-xl shadow-neon-red flex items-center gap-2 transition-all hover:scale-105">
+                        <i class="fa-solid fa-plate-wheat"></i> Meracik Stack Padang
+                    </a>
+                    <a href="#terminal" class="bg-slate-800 hover:bg-slate-700 text-padangGold border border-padangGold/40 font-code font-bold text-sm px-6 py-3.5 rounded-xl flex items-center gap-2 transition-all">
+                        <i class="fa-solid fa-terminal"></i> Buka Terminal CLI
+                    </a>
+                </div>
+
+                <!-- Mini Tech Badges -->
+                <div class="pt-6 border-t border-slate-800 flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs font-code text-slate-400">
+                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-bolt text-padangGold"></i> Fast Response 99.9%</span>
+                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-chiliGreen"></i> Zero-Bug Guarantee</span>
+                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-pepper-hot text-padangRed"></i> Scalable & Pedas</span>
+                </div>
+            </div>
+
+            <!-- Right Hero Card: 10 Plates Stacking Graphic -->
+            <div class="relative flex justify-center">
+                <div class="w-full max-w-md bg-slate-900 border-2 border-padangGold/40 rounded-3xl p-6 shadow-neon-gold space-y-6 relative overflow-hidden">
+                    
+                    <!-- Decorative Bagonjong Roof Header -->
+                    <div class="bg-gradient-to-r from-padangRed via-padangGold to-padangRed py-2 px-4 rounded-xl text-center text-black font-code font-bold text-xs uppercase tracking-widest shadow">
+                        🏛️ RUMAH MAKAN CODE ZIKRUL 🏛️
+                    </div>
+
+                    <!-- Waiter Graphic Card -->
+                    <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-full bg-padangRed flex items-center justify-center text-white text-xl font-bold shadow">
+                                    👨‍🍳
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-sm">Chef / Senior Engineer</h4>
+                                    <p class="text-xs text-padangGold font-code">Zikrul "Atas Nama Server"</p>
+                                </div>
+                            </div>
+                            <span class="bg-chiliGreen/20 text-chiliGreen text-[10px] font-code font-bold px-2.5 py-1 rounded-full border border-chiliGreen/40">
+                                READY TO SERVE
+                            </span>
+                        </div>
+
+                        <!-- 10 Plates Tech Stack Visual -->
+                        <div class="space-y-2 pt-2 font-code text-xs">
+                            <p class="text-slate-400 text-[11px]">10 Piring Bawaan Sekaligus (Current Stack):</p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="bg-slate-900 p-2 rounded-lg border border-slate-700 flex items-center gap-2 text-slate-200">
+                                    <i class="fa-brands fa-react text-cyan-400"></i> React / Next.js
+                                </div>
+                                <div class="bg-slate-900 p-2 rounded-lg border border-slate-700 flex items-center gap-2 text-slate-200">
+                                    <i class="fa-brands fa-node-js text-green-500"></i> Node.js
+                                </div>
+                                <div class="bg-slate-900 p-2 rounded-lg border border-slate-700 flex items-center gap-2 text-slate-200">
+                                    <i class="fa-brands fa-python text-yellow-400"></i> Python AI
+                                </div>
+                                <div class="bg-slate-900 p-2 rounded-lg border border-slate-700 flex items-center gap-2 text-slate-200">
+                                    <i class="fa-solid fa-database text-blue-400"></i> PostgreSQL
+                                </div>
+                                <div class="bg-slate-900 p-2 rounded-lg border border-slate-700 flex items-center gap-2 text-slate-200">
+                                    <i class="fa-brands fa-docker text-sky-400"></i> Docker / K8s
+                                </div>
+                                <div class="bg-slate-900 p-2 rounded-lg border border-slate-700 flex items-center gap-2 text-slate-200">
+                                    <i class="fa-brands fa-aws text-orange-400"></i> AWS Cloud
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Live Status -->
+                    <div class="flex justify-between items-center text-xs font-code text-slate-400 bg-slate-950 p-3 rounded-xl">
+                        <span class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-chiliGreen"></span> Server Status: Warm & Fast
+                        </span>
+                        <span class="text-padangGold">v2.4.0-padang</span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= 2. MENU KOMBO IT PADANG (SERVICES) ================= -->
+    <section id="menu" class="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900/60 relative border-y border-slate-800">
+        <div class="max-w-7xl mx-auto space-y-12">
+            
+            <div class="text-center space-y-3 max-w-2xl mx-auto">
+                <span class="text-padangGold font-code text-xs font-bold uppercase tracking-widest">spesialisasi & keahlian</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Menu Kombo IT Padang</h2>
+                <p class="text-slate-400 text-sm">Layanan software engineering yang diracik khusus dengan resep bumbu rahasia performa tinggi.</p>
+            </div>
+
+            <!-- Menu Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <!-- Menu 1: Rendang Bug Fixer -->
+                <div class="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 hover:border-padangRed transition-all duration-300 hover:-translate-y-2 group flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-14 h-14 rounded-2xl bg-padangRed/20 border border-padangRed flex items-center justify-center text-padangRed text-3xl group-hover:scale-110 transition-transform">
+                            🥩
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-padangGold transition-colors">Rendang Bug Fixer</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">
+                            Debugging mendalam, tahan banting, dan tidak gampang crash. Seperti rendang yang dimasak 12 jam, kode dijamin matang sempurna dan bebas kutu.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-700/50 mt-4 flex items-center justify-between text-xs font-code">
+                        <span class="text-padangGold font-bold">Resep: Deep Trace</span>
+                        <span class="text-slate-400">Level: Hardcore</span>
+                    </div>
+                </div>
+
+                <!-- Menu 2: Ayam Pop Architecture -->
+                <div class="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 hover:border-padangGold transition-all duration-300 hover:-translate-y-2 group flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-14 h-14 rounded-2xl bg-padangGold/20 border border-padangGold flex items-center justify-center text-padangGold text-3xl group-hover:scale-110 transition-transform">
+                            🍗
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-padangGold transition-colors">Ayam Pop Architecture</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">
+                            System Design yang empuk, mulus, dan scalable. Arsitektur microservices clean & modular yang nyaman dikembangkan tim panjang.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-700/50 mt-4 flex items-center justify-between text-xs font-code">
+                        <span class="text-padangGold font-bold">Resep: Scalable</span>
+                        <span class="text-slate-400">Level: Smooth</span>
+                    </div>
+                </div>
+
+                <!-- Menu 3: Samba Lado Full-Stack -->
+                <div class="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 hover:border-chiliGreen transition-all duration-300 hover:-translate-y-2 group flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-14 h-14 rounded-2xl bg-chiliGreen/20 border border-chiliGreen flex items-center justify-center text-chiliGreen text-3xl group-hover:scale-110 transition-transform">
+                            🌶️
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-padangGold transition-colors">Samba Lado Full-Stack</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">
+                            Pengembangan Web & App penuh sensasi, pedas UI-nya, cepat UX-nya. Menggabungkan frontend modern dan backend responsif.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-700/50 mt-4 flex items-center justify-between text-xs font-code">
+                        <span class="text-padangGold font-bold">Resep: React + Node</span>
+                        <span class="text-slate-400">Level: Extra Hot</span>
+                    </div>
+                </div>
+
+                <!-- Menu 4: Es Teh Manis API -->
+                <div class="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 hover:border-cyan-400 transition-all duration-300 hover:-translate-y-2 group flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-400/20 border border-cyan-400 flex items-center justify-center text-cyan-400 text-3xl group-hover:scale-110 transition-transform">
+                            🍹
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-padangGold transition-colors">Es Teh Manis API</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">
+                            Integrasi RESTful / GraphQL API yang segar, lancar jaya, tanpa kendala latency. Penawar dahaga sistem terisolasi.
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-700/50 mt-4 flex items-center justify-between text-xs font-code">
+                        <span class="text-padangGold font-bold">Resep: Fast JSON</span>
+                        <span class="text-slate-400">Level: Refreshing</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= 3. SIMULATOR "ORDER YOUR STACK PADANG" ================= -->
+    <section id="simulator" class="py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto space-y-12">
+            
+            <div class="text-center space-y-3 max-w-2xl mx-auto">
+                <span class="text-padangRed font-code text-xs font-bold uppercase tracking-widest">Simulator Interaktif</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Racik Piring Nasi IT Anda</h2>
+                <p class="text-slate-400 text-sm">Pilih kombinasi komponen teknologi layaknya memesan lauk pauk di rumah makan Padang!</p>
+            </div>
+
+            <!-- Interactive Racik Calculator -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                
+                <!-- Left Option Selectors (2 Cols) -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- Step 1: Nasi (Frontend Framework) -->
+                    <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 space-y-3">
+                        <label class="block text-sm font-bold text-padangGold font-code">
+                            1. PILIH NASI (Frontend Framework):
+                        </label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="selectItem('nasi', 'React / Next.js', 1500000, 2)" id="nasi-react" class="stack-opt bg-slate-900 hover:border-padangGold p-3 rounded-xl border border-slate-700 text-xs font-bold text-slate-200 text-center transition-all">
+                                🍚 Nasi React / Next
+                            </button>
+                            <button onclick="selectItem('nasi', 'Vue.js / Nuxt', 1200000, 2)" id="nasi-vue" class="stack-opt bg-slate-900 hover:border-padangGold p-3 rounded-xl border border-slate-700 text-xs font-bold text-slate-200 text-center transition-all">
+                                🍚 Nasi Vue / Nuxt
+                            </button>
+                            <button onclick="selectItem('nasi', 'Laravel Blade', 1000000, 1)" id="nasi-laravel" class="stack-opt bg-slate-900 hover:border-padangGold p-3 rounded-xl border border-slate-700 text-xs font-bold text-slate-200 text-center transition-all">
+                                🍚 Nasi Laravel
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Lauk Utama (Backend Engine) -->
+                    <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 space-y-3">
+                        <label class="block text-sm font-bold text-padangGold font-code">
+                            2. PILIH LAUK UTAMA (Backend Language):
+                        </label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="selectItem('lauk', 'Node.js Express', 2000000, 3)" id="lauk-node" class="stack-opt bg-slate-900 hover:border-padangGold p-3 rounded-xl border border-slate-700 text-xs font-bold text-slate-200 text-center transition-all">
+                                🍗 Rendang Node.js
+                            </button>
+                            <button onclick="selectItem('lauk', 'Python FastAPI', 2500000, 3)" id="lauk-python" class="stack-opt bg-slate-900 hover:border-padangGold p-3 rounded-xl border border-slate-700 text-xs font-bold text-slate-200 text-center transition-all">
+                                🥩 Dendeng Python
+                            </button>
+                            <button onclick="selectItem('lauk', 'Golang Microservice', 3000000, 4)" id="lauk-golang" class="stack-opt bg-slate-900 hover:border-padangGold p-3 rounded-xl border border-slate-700 text-xs font-bold text-slate-200 text-center transition-all">
+                                🐟 Gulai Golang
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Sambal (Database) -->
+                    <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 space-y-3">
+                        <label class="block text-sm font-bold text-padangGold font-code">
+                            3. PILIH SAMBAL (Database Storage):
+                        </label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="selectItem('sambal', 'PostgreSQL', 800000, 1)" id="sambal-postgres" class="stack-opt bg-slate-900 hover:border-padangGold p-3 rounded-xl border border-slate-700 text-xs font-bold text-slate-200 text-center transition-all">
+                                🌶️ Lado Hijau Postgres
+                            </button>
+                            <button onclick="selectItem('sambal', 'MongoDB', 700000, 1)" id="sambal-mongo" class="stack-opt bg-slate-900 hover:border-padangGold p-3 rounded-xl border border-slate-700 text-xs font-bold text-slate-200 text-center transition-all">
+                                🔴 Lado Merah Mongo
+                            </button>
+                            <button onclick="selectItem('sambal', 'Redis Cache', 900000, 1)" id="sambal-redis" class="stack-opt bg-slate-900 hover:border-padangGold p-3 rounded-xl border border-slate-700 text-xs font-bold text-slate-200 text-center transition-all">
+                                ⚡ Sambal Extra Redis
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Kerupuk (DevOps & Cloud) -->
+                    <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 space-y-3">
+                        <label class="block text-sm font-bold text-padangGold font-code">
+                            4. PILIH KERUPUK (DevOps & Infrastructure):
+                        </label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="selectItem('kerupuk', 'Docker + AWS', 1500000, 2)" id="kerupuk-docker" class="stack-opt bg-slate-900 hover:border-padangGold p-3 rounded-xl border border-slate-700 text-xs font-bold text-slate-200 text-center transition-all">
+                                🫓 Kerupuk Docker AWS
+                            </button>
+                            <button onclick="selectItem('kerupuk', 'Kubernetes Cluster', 2500000, 3)" id="kerupuk-k8s" class="stack-opt bg-slate-900 hover:border-padangGold p-3 rounded-xl border border-slate-700 text-xs font-bold text-slate-200 text-center transition-all">
+                                🫓 Kerupuk K8s Cluster
+                            </button>
+                            <button onclick="selectItem('kerupuk', 'Vercel / Cloudflare', 600000, 1)" id="kerupuk-vercel" class="stack-opt bg-slate-900 hover:border-padangGold p-3 rounded-xl border border-slate-700 text-xs font-bold text-slate-200 text-center transition-all">
+                                🫓 Kerupuk Vercel Edge
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Receipt Card (Summary & Order) -->
+                <div class="bg-slate-900 p-6 rounded-3xl border-2 border-padangGold shadow-neon-gold space-y-6 sticky top-24">
+                    <div class="text-center pb-4 border-b border-slate-800 space-y-1">
+                        <h3 class="font-code font-bold text-lg text-white">NOTA PESANAN IT PADANG</h3>
+                        <p class="text-xs text-padangGold">RM. IT Zikrul • Meja #Server-01</p>
+                    </div>
+
+                    <!-- Order Details Summary -->
+                    <div class="space-y-3 text-xs font-code">
+                        <div class="flex justify-between text-slate-300">
+                            <span>Nasi (Frontend):</span>
+                            <span id="summary-nasi" class="font-bold text-padangGold">-</span>
+                        </div>
+                        <div class="flex justify-between text-slate-300">
+                            <span>Lauk (Backend):</span>
+                            <span id="summary-lauk" class="font-bold text-padangGold">-</span>
+                        </div>
+                        <div class="flex justify-between text-slate-300">
+                            <span>Sambal (Database):</span>
+                            <span id="summary-sambal" class="font-bold text-padangGold">-</span>
+                        </div>
+                        <div class="flex justify-between text-slate-300">
+                            <span>Kerupuk (DevOps):</span>
+                            <span id="summary-kerupuk" class="font-bold text-padangGold">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Calculated Total Effort & Price -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-slate-400">Estimasi Saji (Deploy):</span>
+                            <span id="summary-days" class="font-bold text-chiliGreen font-code">0 Hari</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-slate-300 font-bold">Total Effort / Porsi:</span>
+                            <span id="summary-price" class="font-extrabold text-padangGold font-code text-base">Rp 0</span>
+                        </div>
+                    </div>
+
+                    <!-- Order via WhatsApp Action Button -->
+                    <button onclick="orderViaWA()" class="w-full bg-chiliGreen hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl shadow transition-all flex items-center justify-center gap-2 font-code text-xs">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> PESAN PESANAN CODE VIA WA
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= 4. TERMINAL / CLI SECTION ================= -->
+    <section id="terminal" class="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900/80 border-t border-slate-800">
+        <div class="max-w-4xl mx-auto space-y-8">
+            
+            <div class="text-center space-y-2">
+                <span class="text-padangGold font-code text-xs font-bold uppercase tracking-widest">Interactive Console</span>
+                <h2 class="text-3xl font-extrabold text-white">CLI Rumah Makan IT Padang</h2>
+                <p class="text-slate-400 text-xs">Ketik perintah di terminal bawah ini untuk melihat aksi seru!</p>
+            </div>
+
+            <!-- Terminal Window Box -->
+            <div class="bg-slate-950 rounded-2xl border border-padangGold/50 shadow-2xl overflow-hidden font-code text-xs sm:text-sm">
+                <!-- Terminal Header Bar -->
+                <div class="bg-slate-900 px-4 py-3 flex items-center justify-between border-b border-slate-800">
+                    <div class="flex gap-2">
+                        <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                        <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                    </div>
+                    <span class="text-slate-400 font-semibold text-[11px]">zikrul@rm-it-padang:~ (zsh)</span>
+                    <i class="fa-solid fa-terminal text-padangGold"></i>
+                </div>
+
+                <!-- Terminal Output Container -->
+                <div id="terminal-body" class="p-5 h-64 overflow-y-auto terminal-scroll space-y-2 text-slate-300">
+                    <p class="text-padangGold">Selamat datang di Terminal RM. IT Padang v2.4!</p>
+                    <p class="text-slate-400">Ketik <span class="text-chiliGreen font-bold">'help'</span> untuk melihat daftar perintah yang tersedia.</p>
+                </div>
+
+                <!-- Terminal Input Form -->
+                <form id="terminal-form" onsubmit="handleCLI(event)" class="bg-slate-900/60 px-5 py-3 border-t border-slate-800 flex items-center gap-2">
+                    <span class="text-padangGold font-bold">zikrul@padang-it:~$</span>
+                    <input type="text" id="cli-input" autocomplete="off" class="bg-transparent text-white focus:outline-none w-full font-code text-xs sm:text-sm" placeholder="ketik help...">
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= 5. TESTIMONIALS ================= -->
+    <section id="testimonials" class="py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto space-y-12">
+            
+            <div class="text-center space-y-3 max-w-2xl mx-auto">
+                <span class="text-padangGold font-code text-xs font-bold uppercase tracking-widest">Ulasan Pelanggan</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Kata Pelanggan Puas</h2>
+                <p class="text-slate-400 text-sm">Pengalaman mereka menyantap hasil racikan kode dari Zikrul.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Review 1 -->
+                <div class="bg-slate-800/80 p-6 rounded-2xl border border-slate-700 space-y-4">
+                    <div class="flex text-padangGold text-xs gap-1">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-300 text-xs italic leading-relaxed">
+                        "Codingan mas Zikrul rasanya gurih seperti bumbu rendang 12 jam! Bug raksasa di server kami hilang seketika dalam hitungan menit."
+                    </p>
+                    <div class="flex items-center gap-3 pt-2">
+                        <div class="w-10 h-10 rounded-full bg-padangRed flex items-center justify-center font-bold text-white text-xs">
+                            CTO
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-xs">Budi Santoso</h4>
+                            <span class="text-[10px] text-slate-400 font-code">CTO Startup Fintech</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="bg-slate-800/80 p-6 rounded-2xl border border-slate-700 space-y-4">
+                    <div class="flex text-padangGold text-xs gap-1">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-300 text-xs italic leading-relaxed">
+                        "Proses deploy-nya secepat uda pelayan nasi padang bawa 10 piring! Kinerjanya luar biasa mulus tanpa throttling."
+                    </p>
+                    <div class="flex items-center gap-3 pt-2">
+                        <div class="w-10 h-10 rounded-full bg-padangGold text-black font-bold text-xs">
+                            PM
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-xs">Siti Rahma</h4>
+                            <span class="text-[10px] text-slate-400 font-code">Product Manager E-Commerce</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="bg-slate-800/80 p-6 rounded-2xl border border-slate-700 space-y-4">
+                    <div class="flex text-padangGold text-xs gap-1">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-300 text-xs italic leading-relaxed">
+                        "Arsitektur Ayam Pop ciptaan Zikrul bikin aplikasi kami empuk diakses jutaan user bersamaan. Sangat direkomendasikan!"
+                    </p>
+                    <div class="flex items-center gap-3 pt-2">
+                        <div class="w-10 h-10 rounded-full bg-chiliGreen text-white font-bold text-xs">
+                            CEO
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-xs">Rian Pratama</h4>
+                            <span class="text-[10px] text-slate-400 font-code">Founder Tech Media</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= 6. KONTAK & NOTA PESANAN ================= -->
+    <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900/60 border-t border-slate-800">
+        <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
+            
+            <!-- Contact Info & Location -->
+            <div class="space-y-6">
+                <div class="space-y-2">
+                    <span class="text-padangGold font-code text-xs font-bold uppercase tracking-widest">Hubungi Kami</span>
+                    <h2 class="text-3xl font-extrabold text-white">Lokasi & Kontak Rumah Makan IT</h2>
+                </div>
+
+                <p class="text-slate-400 text-sm leading-relaxed">
+                    Ingin konsultasi proyek atau sekadar berdiskusi tentang arsitektur kode dan resep rendang terbaik? Silakan datang atau kirimkan pesan!
+                </p>
+
+                <div class="space-y-4 font-code text-xs">
+                    <div class="flex items-center gap-3 text-slate-300">
+                        <div class="w-8 h-8 rounded-lg bg-padangRed/20 text-padangRed flex items-center justify-center text-base">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <span>Jl. Server Cloud No. 88, Cluster Cloud Computing, Padang Metaverse</span>
+                    </div>
+
+                    <div class="flex items-center gap-3 text-slate-300">
+                        <div class="w-8 h-8 rounded-lg bg-padangGold/20 text-padangGold flex items-center justify-center text-base">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <span>zikrul@it-padang.dev</span>
+                    </div>
+
+                    <div class="flex items-center gap-3 text-slate-300">
+                        <div class="w-8 h-8 rounded-lg bg-chiliGreen/20 text-chiliGreen flex items-center justify-center text-base">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <span>+62 812-3456-7890 (Fast Response)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Receipt-style Contact Form -->
+            <div class="bg-slate-900 p-8 rounded-3xl border border-padangGold/40 shadow-xl space-y-4">
+                <div class="text-center pb-3 border-b border-slate-800">
+                    <h3 class="font-code font-bold text-white text-base">FORM NOTA KONSULTASI</h3>
+                    <p class="text-[11px] text-slate-400">Isi data di bawah ini untuk terhubung langsung</p>
+                </div>
+
+                <form onsubmit="handleFormSubmit(event)" class="space-y-4 text-xs font-code">
+                    <div>
+                        <label class="block text-slate-300 mb-1">NAMA PELANGGAN:</label>
+                        <input type="text" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-padangGold" placeholder="Asep Code">
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-300 mb-1">EMAIL / TELEGRAM:</label>
+                        <input type="email" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-padangGold" placeholder="asep@dev.id">
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-300 mb-1">PESAN / REQUIREMENT KODE:</label>
+                        <textarea rows="3" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-padangGold" placeholder="Butuh perbaikan bug backend dan optimasi database..."></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-padangRed hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-all shadow-neon-red">
+                        KIRIM NOTA KONSULTASI
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-slate-950 border-t border-slate-800 py-8 px-4 sm:px-6 lg:px-8 text-xs text-slate-400 font-code">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <div>
+                <p>© 2026 Zikrul — IT Specialist & Padang Food Enthusiast.</p>
+                <p class="text-[10px] text-slate-500">Dibuat dengan semangat Bumbu Rendang & Clean Code.</p>
+            </div>
+            <div class="flex gap-4 text-base text-padangGold">
+                <a href="#" class="hover:text-white"><i class="fa-brands fa-github"></i></a>
+                <a href="#" class="hover:text-white"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="#" class="hover:text-white"><i class="fa-brands fa-x-twitter"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // State for Selected IT Padang Stack
+        const selectedStack = {
+            nasi: { name: '-', price: 0, days: 0 },
+            lauk: { name: '-', price: 0, days: 0 },
+            sambal: { name: '-', price: 0, days: 0 },
+            kerupuk: { name: '-', price: 0, days: 0 }
+        };
+
+        // Theme Toggle Functionality
+        let isDarkMode = true;
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (isDarkMode) {
+                html.classList.remove('dark');
+                document.body.classList.remove('bg-padangDark', 'text-slate-100');
+                document.body.classList.add('bg-padangWarm', 'text-slate-900');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                isDarkMode = false;
+            } else {
+                html.classList.add('dark');
+                document.body.classList.remove('bg-padangWarm', 'text-slate-900');
+                document.body.classList.add('bg-padangDark', 'text-slate-100');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                isDarkMode = true;
+            }
+        }
+
+        // Mobile Nav Toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Toast Trigger Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        // Stack Selector Handler
+        function selectItem(category, name, price, days) {
+            selectedStack[category] = { name, price, days };
+            
+            // UI Update
+            document.getElementById(`summary-${category}`).innerText = name;
+            
+            // Calculate Totals
+            const totalPrice = Object.values(selectedStack).reduce((sum, item) => sum + item.price, 0);
+            const totalDays = Object.values(selectedStack).reduce((sum, item) => sum + item.days, 0);
+
+            document.getElementById('summary-price').innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
+            document.getElementById('summary-days').innerText = `${totalDays} Hari`;
+
+            showToast(`Menambahkan ${name} ke Piring IT!`);
+        }
+
+        // WhatsApp Order Link Generator
+        function orderViaWA() {
+            if (selectedStack.nasi.name === '-') {
+                showToast("Silakan pilih minimal komponen Nasi IT terlebih dahulu!");
+                return;
+            }
+
+            const text = `Halo Zikrul IT Padang! Saya mau pesan racikan piring code:%0A` +
+                         `- Nasi (Frontend): ${selectedStack.nasi.name}%0A` +
+                         `- Lauk (Backend): ${selectedStack.lauk.name}%0A` +
+                         `- Sambal (DB): ${selectedStack.sambal.name}%0A` +
+                         `- Kerupuk (DevOps): ${selectedStack.kerupuk.name}%0A%0A` +
+                         `Estimasi Effort: ${document.getElementById('summary-price').innerText}%0A` +
+                         `Estimasi Saji: ${document.getElementById('summary-days').innerText}`;
+
+            window.open(`https://wa.me/6281234567890?text=${text}`, '_blank');
+        }
+
+        // Form Submit Handler
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            showToast("Nota Konsultasi terkirim! Zikrul akan menghubungi Anda.");
+            e.target.reset();
+        }
+
+        // Interactive CLI Terminal Logic
+        function handleCLI(e) {
+            e.preventDefault();
+            const inputElem = document.getElementById('cli-input');
+            const cmd = inputElem.value.trim().toLowerCase();
+            const terminalBody = document.getElementById('terminal-body');
+
+            if (!cmd) return;
+
+            // Echo Input Command
+            const cmdLine = document.createElement('p');
+            cmdLine.className = "text-slate-400";
+            cmdLine.innerHTML = `<span class="text-padangGold">zikrul@padang-it:~$</span> ${cmd}`;
+            terminalBody.appendChild(cmdLine);
+
+            // Response Command Logic
+            const responseLine = document.createElement('p');
+
+            switch (cmd) {
+                case 'help':
+                    responseLine.className = "text-chiliGreen";
+                    responseLine.innerHTML = `Perintah yang tersedia:<br>- <span class="text-white">whoami</span>: Siapa Zikrul?<br>- <span class="text-white">menu</span>: Lihat Menu Kombo IT<br>- <span class="text-white">order rendang</span>: Buka order cepat Bug Fixer<br>- <span class="text-white">deploy-ayam-pop</span>: Simulasi deploy cepat<br>- <span class="text-white">clear</span>: Bersihkan terminal`;
+                    break;
+                case 'whoami':
+                    responseLine.className = "text-slate-200";
+                    responseLine.innerText = "Zikrul: IT Specialist & Padang Food Enthusiast. Hobi koding sambil makan rendang.";
+                    break;
+                case 'menu':
+                    responseLine.className = "text-padangGold";
+                    responseLine.innerText = "Menu: 1. Rendang Bug Fixer | 2. Ayam Pop Architecture | 3. Samba Lado Full-Stack | 4. Es Teh Manis API";
+                    break;
+                case 'order rendang':
+                    responseLine.className = "text-padangRed font-bold";
+                    responseLine.innerText = "🔥 [SUCCESS] Bug Fixer diaktifkan! Server Anda akan kebal bug selama 12 jam berturut-turut.";
+                    break;
+                case 'deploy-ayam-pop':
+                    responseLine.className = "text-chiliGreen font-bold";
+                    responseLine.innerText = "⚡ [DEPLOYED IN 0.8s] System Architecture disajikan hangat & empuk!";
+                    break;
+                case 'clear':
+                    terminalBody.innerHTML = '';
+                    inputElem.value = '';
+                    return;
+                default:
+                    responseLine.className = "text-red-400";
+                    responseLine.innerText = `Command not found: '${cmd}'. Ketik 'help' untuk bantuan.`;
+            }
+
+            terminalBody.appendChild(responseLine);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+            inputElem.value = '';
+        }
+    </script>
+</body>
+</html>
